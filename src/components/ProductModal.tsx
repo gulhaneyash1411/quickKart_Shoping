@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import LoadingState from "./LoadingState";
 import ErrorState from "./ErrorState";
 import { useCart } from "@/context/CartContext";
+import { toast, Toaster } from "sonner";
 
 interface ProductModalProps {
   productId: number | null;
@@ -64,12 +65,14 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
         title: product.title,
         price: product.price,
         image: product.image,
-        quantity,  // Pass selected quantity
-        size,      // Pass selected size
+        quantity,
+        size,
       };
       
       console.log("Adding to cart:", cartItem);
-      addToCart(cartItem); // Call addToCart function from context
+      addToCart(cartItem); // Add to cart
+      toast.success(`${product.title} added to cart!`); // Show product title in toast
+      onClose(); // Close the modal after adding to cart
     }
   };
   
@@ -188,40 +191,42 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
                   </motion.p>
                   
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    className="mt-auto space-y-4"
-                  >
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="text-sm text-muted-foreground">Quantity</div>
-                    <select id="quantity-select" className="w-full p-2 border rounded bg-card">
-                      {[1, 2, 3, 4, 5].map(n => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="text-sm text-muted-foreground">Size</div>
-                    <select id="size-select" className="w-full p-2 border rounded bg-card">
-                      {['S', 'M', 'L', 'XL'].map(size => (
-                        <option key={size} value={size}>{size}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                    
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleAddToCart} // Call function when clicked
-                    className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium"
-                  >
-                    Add to Cart
-                </motion.button>
-                  </motion.div>
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="mt-auto space-y-4"
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="text-sm text-muted-foreground">Quantity</div>
+            <select id="quantity-select" className="w-full p-2 border rounded bg-card">
+              {[1, 2, 3, 4, 5].map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm text-muted-foreground">Size</div>
+            <select id="size-select" className="w-full p-2 border rounded bg-card">
+              {["S", "M", "L", "XL"].map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleAddToCart}
+          className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium"
+        >
+          Add to Cart
+        </motion.button>
+      </motion.div>
+      {/* Toast Notification */}
+      <Toaster position="bottom-right" richColors />
                 </div>
               </div>
             ) : null}

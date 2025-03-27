@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+// CartContext.tsx
+import { createContext, useContext, useState } from "react";
 
-interface CartItem {
+interface Product {
   id: number;
   title: string;
   price: number;
@@ -9,62 +10,41 @@ interface CartItem {
   size: string;
 }
 
-interface CartContextProps {
-  cart: CartItem[];
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number, size: string) => void;
-  clearCart: () => void;
-  cartCount: number;
+interface CartContextType {
+  cart: Product[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (id: number) => void;
 }
 
-const CartContext = createContext<CartContextProps | undefined>(undefined);
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
 
-  const addToCart = (item: CartItem) => {
-    setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex((p) => p.id === item.id && p.size === item.size);
-
-      if (existingItemIndex !== -1) {
-        // If the same item with the same size exists, increase the quantity
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex] = {
-          ...updatedCart[existingItemIndex],
-          quantity: updatedCart[existingItemIndex].quantity + item.quantity,
-        };
-        return updatedCart;
-      }
-
-      // If it's a new size or a new item, add it to the cart
-      return [...prevCart, item];
-    });
+  const addToCart = (product: Product) => {
+    setCart((prev) => [...prev, product]);
   };
-  const removeFromCart = (id: number, size: string) => {
-    setCart((prevCart) => prevCart.filter((item) => !(item.id === id && item.size === size)));
-  };
-
-  const clearCart = () => {
-    setCart([]);
+  const removeFromCart = (id: number) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
-    <CartContext.Provider
-    value={{
-      cart,
-      addToCart,
-      removeFromCart,
-      clearCart,
-      cartCount: cart.reduce((acc, item) => acc + item.quantity, 0),
-    }}
-  >
-    {children}
-  </CartContext.Provider>
+    <CartContext.Provider 
+    value={{ 
+      cart, 
+      addToCart, 
+      removeFromCart 
+      }}
+      >
+      {children}
+    </CartContext.Provider>
   );
 };
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within a CartProvider");
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
   return context;
 };

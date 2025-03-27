@@ -105,8 +105,8 @@ cart.forEach(item => {
           </div>
       </motion.div>
     </header>
-          {isCartOpen && <CartModal cart={cart} onClose={() => setIsCartOpen(false)} />}
-</>
+    {isCartOpen && <CartModal onClose={() => setIsCartOpen(false)} />}
+    </>
   );
 };
 
