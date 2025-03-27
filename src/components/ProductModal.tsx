@@ -44,14 +44,32 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
   }, [onClose]);
 
   const handleAddToCart = () => {
+    const quantitySelect = document.getElementById("quantity-select") as HTMLSelectElement;
+    const sizeSelect = document.getElementById("size-select") as HTMLSelectElement;
+  
+    if (!quantitySelect || !sizeSelect) {
+      console.error("Dropdown elements not found");
+      return;
+    }
+  
+    const quantity = parseInt(quantitySelect.value, 10);
+    const size = sizeSelect.value;
+  
+    console.log("Selected Quantity:", quantity);
+    console.log("Selected Size:", size);
+  
     if (product) {
-      addToCart({
+      const cartItem = {
         id: product.id,
         title: product.title,
         price: product.price,
         image: product.image,
-        quantity: 1
-      });
+        quantity,  // Pass selected quantity
+        size,      // Pass selected size
+      };
+      
+      console.log("Adding to cart:", cartItem);
+      addToCart(cartItem); // Call addToCart function from context
     }
   };
   
@@ -175,34 +193,34 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
                     transition={{ duration: 0.5, delay: 0.5 }}
                     className="mt-auto space-y-4"
                   >
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <div className="text-sm text-muted-foreground">Quantity</div>
-                        <select className="w-full p-2 border rounded bg-card">
-                          {[1, 2, 3, 4, 5].map(n => (
-                            <option key={n} value={n}>{n}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="text-sm text-muted-foreground">Size</div>
-                        <select className="w-full p-2 border rounded bg-card">
-                          {['S', 'M', 'L', 'XL'].map(size => (
-                            <option key={size} value={size}>{size}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="text-sm text-muted-foreground">Quantity</div>
+                    <select id="quantity-select" className="w-full p-2 border rounded bg-card">
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="text-sm text-muted-foreground">Size</div>
+                    <select id="size-select" className="w-full p-2 border rounded bg-card">
+                      {['S', 'M', 'L', 'XL'].map(size => (
+                        <option key={size} value={size}>{size}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
                     
-                    <motion.button
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={handleAddToCart} // Call function when clicked
-      className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium"
-    >
-      Add to Cart
-    </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAddToCart} // Call function when clicked
+                    className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium"
+                  >
+                    Add to Cart
+                </motion.button>
                   </motion.div>
                 </div>
               </div>

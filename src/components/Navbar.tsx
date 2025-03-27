@@ -1,16 +1,38 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext"; // Import the cart context
+import CartModal from "./CartModal";
 
+interface Product {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+}
 const Navbar = () => {
   const { toast } = useToast();
 
-  const { cartCount } = useCart(); // Get the cart count
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const { cart } = useCart(); // Get cart from context
+  const cartCount = cart.length; // Update cart count dynamically
 
+
+const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+console.log("Total Quantity of all items:", totalQuantity);
+
+cart.forEach(item => {
+  console.log(`Item ID: ${item.id}, Quantity: ${item.quantity}`);
+});
+  console.log("Is Cart Open:", isCartOpen);
+  console.log("Cart Items:", cart);
+  console.log("Cart Count:", cartCount);
+  
 
   const handleLogoClick = () => {
     toast({
@@ -20,6 +42,7 @@ const Navbar = () => {
   };
 
   return (
+    <>
     <header className="fixed top-0 left-0 right-0 z-50 glass">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -46,7 +69,7 @@ const Navbar = () => {
         </div>
 
         <nav className="hidden md:flex space-x-8">
-          {['Products', 'About', 'Contact'].map((item, i) => (
+          {[ 'About', 'Products', 'Contact'].map((item, i) => (
             <motion.a
               key={item}
               href={`#${item.toLowerCase()}`}
@@ -64,23 +87,26 @@ const Navbar = () => {
 
 
         <div className="flex items-center gap-4">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-foreground rounded-md hidden md:flex"
-          >
-            <div className="relative">
-              <ShoppingCart className="w-6 h-6 text-primary" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-                  {cartCount}
-                </span>
-              )}
-            </div>
-          </motion.button>
-        </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-foreground rounded-md hidden md:flex"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <div className="relative">
+                <ShoppingCart className="w-6 h-6 text-primary" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+            </motion.button>
+          </div>
       </motion.div>
     </header>
+          {isCartOpen && <CartModal cart={cart} onClose={() => setIsCartOpen(false)} />}
+</>
   );
 };
 

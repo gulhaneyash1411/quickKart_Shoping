@@ -6,11 +6,14 @@ interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  size: string;
 }
 
 interface CartContextProps {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
+  removeFromCart: (id: number, size: string) => void;
+  clearCart: () => void;
   cartCount: number;
 }
 
@@ -21,18 +24,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (item: CartItem) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((p) => p.id === item.id);
-      if (existingItem) {
-        return prevCart.map((p) => p.id === item.id ? { ...p, quantity: p.quantity + 1 } : p);
+      const existingItemIndex = prevCart.findIndex((p) => p.id === item.id && p.size === item.size);
+
+      if (existingItemIndex !== -1) {
+        // If the same item with the same size exists, increase the quantity
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex] = {
+          ...updatedCart[existingItemIndex],
+          quantity: updatedCart[existingItemIndex].quantity + item.quantity,
+        };
+        return updatedCart;
       }
-      return [...prevCart, { ...item, quantity: 1 }];
+
+      // If it's a new size or a new item, add it to the cart
+      return [...prevCart, item];
     });
+  };
+  const removeFromCart = (id: number, size: string) => {
+    setCart((prevCart) => prevCart.filter((item) => !(item.id === id && item.size === size)));
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, cartCount: cart.reduce((acc, item) => acc + item.quantity, 0) }}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider
+    value={{
+      cart,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      cartCount: cart.reduce((acc, item) => acc + item.quantity, 0),
+    }}
+  >
+    {children}
+  </CartContext.Provider>
   );
 };
 
