@@ -25,59 +25,61 @@ const Hero = () => {
       <div className="absolute inset-0 bg-black/40 -z-10" />
 
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center text-center space-y-4 text-white">
-        <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-4 text-center"
-    >
-      <h1 className="text-2xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-        Premium Products for
-        <br />
+      <div className="flex flex-col items-center text-center space-y-4 text-white">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    className="space-y-4 text-center"
+  >
+    <h1 className="text-2xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+      Premium Products for
+    </h1>
         {/* Text Slide In/Out Animation */}
         <AnimatePresence mode="wait">
-          <motion.span
-            key={index}
-            className="bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-clip-text text-transparent inline-block"
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -100, opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          >
-            {phrases[index]}
-          </motion.span>
-        </AnimatePresence>
-      </h1>
-      <p className="max-w-[600px] mx-auto text-white/90 md:text-xl lg:text-lg xl:text-xl">
-        Beautifully designed products with exceptional attention to detail and premium quality.
-      </p>
-    </motion.div>
+      <motion.span
+        key={index}
+        className=" text-3xl font-bold  bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-clip-text text-transparent inline-block"
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -100, opacity: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        style={{ display: "block" }} // Ensure it behaves like a block element
+      >
+        {phrases[index]}
+      </motion.span>
+    </AnimatePresence>
+    {/* Description */}
+    <p className="max-w-[600px] mx-auto text-white/90 md:text-xl lg:text-lg xl:text-xl">
+      Beautifully designed products with exceptional attention to detail and premium quality.
+    </p>
+  </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row gap-4 mt-6"
-          >
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="#products"
-              className="px-6 py-3 text-base font-medium text-white bg-purple-600 rounded-lg"
-            >
-              Explore Collection
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="#contact"
-              className="px-6 py-3 text-base font-medium bg-yellow-400 text-black rounded-lg"
-            >
-              Contact Us
-            </motion.a>
-          </motion.div>
-        </div>
+  {/* Buttons */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    className="flex flex-col sm:flex-row gap-4 mt-6"
+  >
+    <motion.a
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      href="#products"
+      className="px-6 py-3 text-base font-medium text-white bg-purple-600 rounded-lg"
+    >
+      Explore Collection
+    </motion.a>
+    <motion.a
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      href="#contact"
+      className="px-6 py-3 text-base font-medium bg-yellow-400 text-black rounded-lg"
+    >
+      Contact Us
+    </motion.a>
+  </motion.div>
+</div>
       </div>
     </section>
   );

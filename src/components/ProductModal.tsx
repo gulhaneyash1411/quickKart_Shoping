@@ -21,7 +21,17 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
 
   const modalRef = useRef<HTMLDivElement>(null);
   const { data: product, isLoading, error } = useProduct(productId || 0);
-  
+  console.log("Fetching product with ID:", productId);
+  console.log("Product data:", product);
+  console.log("Loading state:", isLoading);
+  console.log("Error state:", error);
+
+  useEffect(() => {
+    if (product) {
+      console.log("Product Category:", product.category);
+    }
+  }, [product]);
+
   // Close on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -46,32 +56,35 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
 
   const handleAddToCart = () => {
     const quantitySelect = document.getElementById("quantity-select") as HTMLSelectElement;
-    const sizeSelect = document.getElementById("size-select") as HTMLSelectElement;
+    const sizeSelect = document.getElementById("size-select") as HTMLSelectElement | null; // Make nullable
   
-    if (!quantitySelect || !sizeSelect) {
-      console.error("Dropdown elements not found");
+    if (!quantitySelect) {
+      console.error("Quantity dropdown not found");
       return;
     }
   
     const quantity = parseInt(quantitySelect.value, 10);
-    const size = sizeSelect.value;
+    const size = sizeSelect ? sizeSelect.value : null; // Handle missing size
   
     console.log("Selected Quantity:", quantity);
-    console.log("Selected Size:", size);
+    console.log("Selected Size:", size || "N/A");
   
     if (product) {
-      const cartItem = {
+      const cartItem: any = {
         id: product.id,
         title: product.title,
         price: product.price,
         image: product.image,
         quantity,
-        size,
       };
-      
+      // Add size only if it exists
+      if (size) {
+        cartItem.size = size;
+      }
+  
       console.log("Adding to cart:", cartItem);
       addToCart(cartItem); // Add to cart
-      toast.success(`${product.title} added to cart!`); // Show product title in toast
+      toast.success(`${product.title} added to cart!`);
       onClose(); // Close the modal after adding to cart
     }
   };
@@ -206,6 +219,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
             </select>
           </div>
 
+          {product && (product.category === "women's clothing" || product.category === "men's clothing") && (
           <div className="space-y-2">
             <div className="text-sm text-muted-foreground">Size</div>
             <select id="size-select" className="w-full p-2 border rounded bg-card">
@@ -214,6 +228,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
               ))}
             </select>
           </div>
+          )}
         </div>
 
         <motion.button
