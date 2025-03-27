@@ -24,14 +24,8 @@ const Navbar = () => {
 
 const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-console.log("Total Quantity of all items:", totalQuantity);
 
-cart.forEach(item => {
-  console.log(`Item ID: ${item.id}, Quantity: ${item.quantity}`);
-});
-  console.log("Is Cart Open:", isCartOpen);
-  console.log("Cart Items:", cart);
-  console.log("Cart Count:", cartCount);
+
   
 
   const handleLogoClick = () => {

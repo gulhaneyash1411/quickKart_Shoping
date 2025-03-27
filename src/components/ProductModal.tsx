@@ -21,16 +21,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
 
   const modalRef = useRef<HTMLDivElement>(null);
   const { data: product, isLoading, error } = useProduct(productId || 0);
-  console.log("Fetching product with ID:", productId);
-  console.log("Product data:", product);
-  console.log("Loading state:", isLoading);
-  console.log("Error state:", error);
+ 
 
-  useEffect(() => {
-    if (product) {
-      console.log("Product Category:", product.category);
-    }
-  }, [product]);
 
   // Close on click outside
   useEffect(() => {
@@ -66,8 +58,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
     const quantity = parseInt(quantitySelect.value, 10);
     const size = sizeSelect ? sizeSelect.value : null; // Handle missing size
   
-    console.log("Selected Quantity:", quantity);
-    console.log("Selected Size:", size || "N/A");
+ 
   
     if (product) {
       const cartItem: any = {
@@ -82,7 +73,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ productId, onClose }) => {
         cartItem.size = size;
       }
   
-      console.log("Adding to cart:", cartItem);
       addToCart(cartItem); // Add to cart
       toast.success(`${product.title} added to cart!`);
       onClose(); // Close the modal after adding to cart
